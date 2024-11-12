@@ -1,10 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react'
-import { Home, Users, Settings, LogOut, BarChart2, Download, ThumbsUp } from "lucide-react"
+import { Home, Users, Settings, LogOut, BarChart2, Download, ThumbsUp,ShieldBan,ArrowLeftRight,MessageCircleReply } from "lucide-react"
 import { useRouter } from 'next/navigation'
-
+import { error } from 'console';
+import Cookies from 'js-cookie';
 // Composants pour chaque page
+const handeltest= ()=>{
+  console.log("halo")
+}
+const finduser= async () =>{
+  
+}
+
 const AccueilPage = ({ emailCount, loading, error }) => (
   <>
     <h2 className="text-3xl font-semibold text-gray-800 mb-6">Bienvenue sur votre Dashboard</h2>
@@ -48,6 +56,13 @@ const AccueilPage = ({ emailCount, loading, error }) => (
        
       </p>
     </div>
+    <div className="mt-4">
+        <button 
+        onClick={handeltest}
+        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+          test
+        </button>
+      </div>
   </>
 )
 
@@ -128,6 +143,7 @@ const AutoReply = () => (
         <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
           confirmer
         </button>
+        
       </div>
     </div>
     <div className="bg-white shadow-md rounded-lg p-6">
@@ -142,7 +158,86 @@ const AutoReply = () => (
     </div>
   </div>
 )
-
+const Configuration = () => (
+  <div className="space-y-6">
+    <div className="bg-white shadow-md rounded-lg p-6">
+      <h2 className="text-3xl font-semibold text-gray-800 mb-6">Configuration de l'Application</h2>
+      <form className="space-y-4">
+        <div>
+          <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">
+            Adresse e-mail
+          </label>
+          <input
+            type="email"
+            id="email"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Entrez votre e-mail"
+          />
+        </div>
+        <div>
+          <label htmlFor="appPassword" className="block text-gray-700 font-semibold mb-2">
+            Mot de passe de l'application
+          </label>
+          <input
+            type="password"
+            id="appPassword"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Entrez le mot de passe de l'application"
+          />
+        </div>
+        <div>
+          <label htmlFor="imapHost" className="block text-gray-700 font-semibold mb-2">
+            IMAP Host
+          </label>
+          <input
+            type="text"
+            id="imapHost"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Entrez l'hôte IMAP"
+          />
+        </div>
+        <div>
+          <label htmlFor="imapPort" className="block text-gray-700 font-semibold mb-2">
+            IMAP Port
+          </label>
+          <input
+            type="number"
+            id="imapPort"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Entrez le port IMAP"
+          />
+        </div>
+        <div>
+          <label htmlFor="smtpHost" className="block text-gray-700 font-semibold mb-2">
+            SMTP Host
+          </label>
+          <input
+            type="text"
+            id="smtpHost"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Entrez l'hôte SMTP"
+          />
+        </div>
+        <div>
+          <label htmlFor="smtpPort" className="block text-gray-700 font-semibold mb-2">
+            SMTP Port
+          </label>
+          <input
+            type="number"
+            id="smtpPort"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Entrez le port SMTP"
+          />
+        </div>
+        <div className="mt-4">
+          <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Confirmer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+);
 export default function Dashboard() {
   const [emailCount, setEmailCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -183,6 +278,8 @@ export default function Dashboard() {
         return <AutoMove />;
       case 'AutoReply':
           return <AutoReply />;
+      case 'Configuration':
+            return <Configuration />;
       default:
         return <AccueilPage emailCount={emailCount} loading={loading} error={error} />;
     }
@@ -191,8 +288,11 @@ export default function Dashboard() {
   // Nouvelle fonction pour gérer la déconnexion
   const handleLogout = () => {
     // TODO: Ajouter ici la logique de déconnexion (par exemple, effacer les tokens d'authentification)
+    Cookies.remove('email')
     router.push('/login');
+
   };
+  
   
   return (
     <div className="flex h-screen bg-gray-100">
@@ -207,16 +307,20 @@ export default function Dashboard() {
             Accueil
           </button>
           <button onClick={() => setActivePage('AntiSpam')} className="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">
-            <Users className="inline-block w-5 h-5 mr-2" />
+            <ShieldBan className="inline-block w-5 h-5 mr-2" />
             AntiSpam
           </button>
           <button onClick={() => setActivePage('AutoMove')} className="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">
-            <Settings className="inline-block w-5 h-5 mr-2" />
+            <ArrowLeftRight className="inline-block w-5 h-5 mr-2" />
             AutoMove
           </button>
           <button onClick={() => setActivePage('AutoReply')} className="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">
-            <Users className="inline-block w-5 h-5 mr-2" />
+            <MessageCircleReply className="inline-block w-5 h-5 mr-2" />
             AutoReply
+          </button>
+          <button onClick={() => setActivePage('Configuration')} className="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">
+            <Settings className="inline-block w-5 h-5 mr-2" />
+            Configuration
           </button>
           {/* Modification : Remplacé "Aide" par "Logout" et ajouté la fonction handleLogout */}
           <button onClick={handleLogout} className="block px-4 py-2 text-gray-600 hover:bg-gray-200 hover:text-gray-800">

@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react'
+import { useEffect ,useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { METHODS } from 'http';
+import { headers } from 'next/headers';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [showImap, setShowImap] = useState(false)
@@ -10,6 +13,16 @@ export default function Login() {
   const [port, setPort] = useState('')
   const [appPassword, setAppPassword] = useState('')
   const router = useRouter()
+  ///debut
+  // Vérifier si l'utilisateur est déjà connecté
+  useEffect(() => {
+    const savedEmail = Cookies.get('email');  // Lire le cookie
+    if (savedEmail) {
+      router.push('../dashboard');  // Rediriger vers le tableau de bord si l'email est trouvé
+    }
+  }, [router]);
+  ///fin
+
 
   const handleGmailLogin = () => {
     console.log('Gmail login')
@@ -44,7 +57,10 @@ export default function Login() {
   
       if (response.ok) {
         console.log('Login successful');
+        const data = await response.json();  // Récupérer les données de la réponse
+        Cookies.set('email', email, { expires: 7 });  // Créer le cookie pour l'email
         console.log(response.status)
+        
         // Redirection vers le dashboard après un login réussi
         router.push('../dashboard');
       } else {
@@ -54,6 +70,7 @@ export default function Login() {
       console.error('Error:', error);
     }
   };
+
 
   const handleBack = () => {
     setShowImap(false)
